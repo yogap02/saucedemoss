@@ -16,13 +16,19 @@ This project aiming to perform Automation test on [SauceDemo Project](https://ww
    ```sh
    npm install
    ```
+2. Set env value :
+    - Create .env file based on the parameter on the .env.example
+3. Set Test Data : 
+    - Go to folder data
+    - Fill all necessary information in credential.js
+    - Use credential.js.example for the example of expected value
 2. Run tests:
    ```sh
-   npx playwright test
+   npm run test
    ```
 3. View HTML report:
    ```sh
-   npx playwright show-report
+   npm run show-report
    ```
 
 ### Scenarios
