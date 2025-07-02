@@ -1,5 +1,5 @@
 import { test } from '@playwright/test';
-import { credential } from '../../datas/devCredential';
+import { credential } from '../../data/credential';
 
 const LoginPage = require('../../pages/loginPage');
 const InventoryPage = require('../../pages/inventoryPage');
