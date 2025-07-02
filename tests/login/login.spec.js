@@ -1,5 +1,5 @@
 import { test } from '@playwright/test';
-import { credential } from '../../datas/devCredential';
+import { credential } from '../../data/credential';
 const LoginPage = require('../../pages/loginPage');
 
 test('[TESTID] User able login', async ({ page }) => {

@@ -1,22 +1,23 @@
 {
-  "name": "sspw",
+  "name": "sausedemo-automation",
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
     "test": "playwright test",
     "test:debug": "playwright test --debug",
     "test:report": "playwright show-report",
-    "test:ui": "playwright test --ui"
+    "test:ui": "playwright test --ui",
+    "show-report": "playwright show-report"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "description": "",
   "devDependencies": {
-    "@playwright/test": "^1.53.2",
-    "@types/node": "^24.0.10"
+    "@playwright/test": "1.53.2",
+    "@types/node": "24.0.10"
   },
   "dependencies": {
-    "dotenv": "^17.0.1"
+    "dotenv": "17.0.1"
   }
 }
