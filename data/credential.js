@@ -4,5 +4,6 @@ export const credential = {
   firstName: '',
   lastName: '',
   postalCode: '',
-  tax : 0,
+  tax: 0,
+  desiredItems: [],
 };

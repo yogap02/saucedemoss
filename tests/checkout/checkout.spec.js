@@ -15,10 +15,34 @@ test('[TESTID] User able to checkout a product', async ({ page }) => {
 
   let randomItemCount = Math.floor(Math.random() * 3) + 2
   const checkoutInformation = await inventoryPage.addRandomItemToCart(randomItemCount);
+
   await inventoryPage.checkout();
 
   await checkoutPage.fillCheckoutForm(credential.firstName, credential.lastName, credential.postalCode);
   await checkoutPage.verifyCheckout(checkoutInformation.totalItems, checkoutInformation.price, credential.tax);
   await checkoutPage.completeCheckout();
-
 });
+
+test('[TESTID] User able to checkout specific products from credential', async ({ page }) => {
+  const loginPage = new LoginPage(page);
+  const inventoryPage = new InventoryPage(page);
+  const checkoutPage = new CheckoutPage(page);
+
+  await loginPage.goto();
+  await loginPage.login(credential.username, credential.password);
+
+  const totalPrice = await inventoryPage.addItemsAndGetTotalPrice(credential.desiredItems);
+  await inventoryPage.goToCart();
+  await inventoryPage.checkout();
+
+  await checkoutPage.fillCheckoutForm(credential.firstName, credential.lastName, credential.postalCode);
+
+  await checkoutPage.verifyCheckout(
+    credential.desiredItems.length,
+    totalPrice,
+    credential.tax
+  );
+
+  await checkoutPage.completeCheckout();
+});
+
