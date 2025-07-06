@@ -1,8 +1,9 @@
 export const credential = {
-  username: '',
-  password: '',
-  firstName: '',
-  lastName: '',
-  postalCode: '',
-  tax : 0,
+  username: 'standard_user',
+  password: 'secret_sauce',
+  firstName: 'tom',
+  lastName: 'bob',
+  postalCode: '12345',
+  tax: 0.08,
+  desiredItems: ['Sauce Labs Bolt T-Shirt', 'Sauce Labs Fleece Jacket', 'Sauce Labs Onesie'],
 };
