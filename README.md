@@ -33,13 +33,16 @@ This project aiming to perform Automation test on [SauceDemo Project](https://ww
 
 ### Scenarios
 
-1. Login
-Make sure that user able to login without any problem
+1. Auth
+Make sure that user able to login successfully
+Make sure that user able to logout successfully
 
 2. Checkout
-- Make sure that user able to checkout without any problem
-- It will trigger checkout of randomize quantity of an item between 2,3 and 4 to checkout 
-then verify all the item informations.
+- Make sure that user able to checkout random item successfully
+- Make sure that user able to checkout based on array of item name
+
+3. Sorts
+- Make sure user able to perform sorting in the inventory page
 
 
 ### Useful Commands
