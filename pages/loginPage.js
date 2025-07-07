@@ -6,7 +6,7 @@ class LoginPage {
    */
   constructor(page) {
     this.page = page;
-    
+
     this.headerTitle = 'Swag Labs'
     this.inventoryURL = 'https://www.saucedemo.com/inventory.html';
 
@@ -14,6 +14,7 @@ class LoginPage {
     this.loginButton = page.locator('input[data-test="login-button"]');
     this.usernameInput = page.locator('input[data-test="username"]');
     this.passwordInput = page.locator('input[data-test="password"]');
+    this.errorContainer = page.locator('h3[data-test="error"]');
   }
 
   async goto() {
@@ -26,7 +27,7 @@ class LoginPage {
     });
   }
 
-  async login(username, password) {
+  async login(username, password, errorExpected = false) {
     await this.usernameInput.fill(username);
     let assertMessage = `Username correctly filled: ${username}`;
     await test.step(assertMessage, async () => {
@@ -40,10 +41,14 @@ class LoginPage {
     });
 
     await this.loginButton.click();
-    assertMessage = `Should navigate to ${this.inventoryURL} after login`
-    await test.step(assertMessage, async () => {
-      expect(this.page).toHaveURL(this.inventoryURL, assertMessage);
-    });
+
+    if (!errorExpected) {
+      assertMessage = `Should navigate to ${this.inventoryURL} after login`
+      await test.step(assertMessage, async () => {
+        expect(this.page).toHaveURL(this.inventoryURL, assertMessage);
+      });
+    }
+
   }
 
   async waitLoading() {
@@ -52,6 +57,14 @@ class LoginPage {
 
   async getHeaderText() {
     return this.header.textContent();
+  }
+
+  async assertErrorMessage(expectedMessage) {
+    await this.errorContainer.waitFor({ state: 'visible', timeout: 5000 });
+    let assertMessage = `Error message should contain "${expectedMessage}"`;
+    await test.step(assertMessage, async () => {
+      expect(await this.errorContainer.textContent()).toContain(expectedMessage, assertMessage);
+    });
   }
 }
 

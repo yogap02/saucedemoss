@@ -5,6 +5,10 @@ class InventoryPage {
      * @param {import('@playwright/test').Page} page
      */
     constructor(page) {
+
+        const LoginPage = require('./loginPage');
+        this.loginPage = new LoginPage(page); 
+
         this.page = page;
         this.cartUrl = 'https://www.saucedemo.com/cart.html';
         this.totalPrice = 0;
@@ -17,6 +21,8 @@ class InventoryPage {
         this.cartItems = page.locator(this.cartItemLocator);
         this.checkoutButton = page.locator('button[data-test="checkout"]');
         this.inventoryItems = page.locator('div[class="inventory_item"]')
+        this.menuButton = page.locator('img[data-test="open-menu"]').locator('..');
+        this.logoutButton = page.locator('a[data-test="logout-sidebar-link"]');
     }
 
     async addItemsAndGetTotalPrice(itemNames) {
@@ -109,6 +115,16 @@ class InventoryPage {
     async getAllItemsPrice() {
         const prices = await this.page.locator(this.priceBarLocator).allTextContents();
         return prices.map(price => parseFloat(price.replace(/[^\\d.]/g, '')));
+    }
+
+    async logout() {
+        await this.menuButton.click();
+        await this.logoutButton.click();
+        await this.loginPage.waitLoading();
+        let assertMessage = `Should navigate to login page after logout`;
+        await test.step(assertMessage, async () => {
+            await expect(this.loginPage.usernameInput).toBeVisible();
+        });
     }
 }
 
