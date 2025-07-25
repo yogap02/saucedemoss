@@ -1,4 +1,5 @@
 import { test, expect } from '@playwright/test';
+import { start } from 'repl';
 
 class InventoryPage {
     /**
@@ -7,7 +8,7 @@ class InventoryPage {
     constructor(page) {
 
         const LoginPage = require('./loginPage');
-        this.loginPage = new LoginPage(page); 
+        this.loginPage = new LoginPage(page);
 
         this.page = page;
         this.cartUrl = 'https://www.saucedemo.com/cart.html';
@@ -77,6 +78,65 @@ class InventoryPage {
             price: this.totalPrice,
             totalItems: clicked.length,
         };
+    }
+
+    async randomizeArray(array){
+
+        for (let a = 0; a < array.length; a++) {
+            const randomIndex = Math.floor(Math.random() * array.length);
+            [array[a], array[randomIndex]] = [array[randomIndex], array[a]];
+        }
+        return array;
+    }
+
+    async checkoutItemBasedOnPrice(startPrice = 0, grantTotal = 0) {
+        let totalItem = 0
+        let subtotal = 0
+        console.log(`Start price: ${startPrice}, Grant total: ${grantTotal}`); const targetItems = []
+
+
+
+        const items = await this.page.locator(this.priceBarLocator).all();
+
+        const randomizedArray = await this.randomizeArray([...items]);
+        // let tagetLoop
+        // const randomizer = Math.floor(Math.random() * 2 + 1)
+        // console.log(`Randomizer: ${randomizer}`);
+        // if (randomizer === 1) {
+        //     tagetLoop = items.sort((a, b) => a - b)
+        // } else {
+        //     tagetLoop = items.sort((a, b) => b - a)
+        // }
+        console.log(`Items unsorted: ${JSON.stringify(items, null, 2)}`);
+        console.log(`Items randomized: ${JSON.stringify(randomizedArray, null, 2)}`);
+
+
+
+
+
+        // console.log(`Total items found: ${JSON.stringify(randomizedArray, null, 2)}`);
+        for (let i = 0; i < randomizedArray.length; i++) {
+            const priceText = await randomizedArray[i].textContent();
+            const parsedPrice = parseFloat(priceText.replace(/[^\d.]/g, ''));
+            if (subtotal > grantTotal) {
+                break;
+            }
+            if (parsedPrice < startPrice && subtotal + parsedPrice <= grantTotal) {
+                subtotal += parsedPrice;
+                totalItem++;
+                let clickButton = (randomizedArray[i]).locator('..').locator('button');
+                await clickButton.click();
+                let assertMessage = `Checking out item price ${parsedPrice} under ${startPrice} should be added to cart`;
+                await test.step(assertMessage, async () => {
+                    await expect(clickButton, { timeout: 5000 }).toHaveText('Remove', assertMessage);
+                });
+            }
+        }
+
+        return {
+            totalItems: totalItem,
+            price: subtotal
+        }
     }
 
     async goToCart() {

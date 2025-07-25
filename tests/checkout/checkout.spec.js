@@ -39,3 +39,20 @@ test('[TESTID] User able to checkout specific products from credential', async (
   await checkoutPage.completeCheckout();
 });
 
+// less than $16
+// total cannot over $38
+
+test.only('[TESTID] User cannot checkout with less than $16', async () => {
+  const totalPrice = await inventoryPage.checkoutItemBasedOnPrice(16, 38)
+  
+  await inventoryPage.goToCart();
+  await inventoryPage.checkout();
+  await checkoutPage.fillCheckoutForm(credential.firstName, credential.lastName, credential.postalCode);
+  await checkoutPage.verifyCheckout(
+    totalPrice.totalItems,
+    totalPrice.price,
+    credential.tax
+  );
+  await checkoutPage.completeCheckout();
+
+})
